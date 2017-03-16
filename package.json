@@ -4,7 +4,8 @@
   "description": "An ubuntu 16.04 image with node installed",
   "scripts": {
     "build": "docker build -t hibes/ubuntu-nvm .",
-    "publish": "docker push hibes/ubuntu-nvm:latest"
+    "publish": "docker push hibes/ubuntu-nvm:latest",
+    "start": "docker run -ti hibes/ubuntu-nvm /bin/bash"
   },
   "repository": {
     "type": "git",
