@@ -1,6 +1,6 @@
 {
   "name": "ubuntu-nvm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An ubuntu 16.04 image with node installed",
   "scripts": {
     "build": "docker build -t hibes/ubuntu-nvm .",
