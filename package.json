@@ -1,0 +1,19 @@
+{
+  "name": "ubuntu-nvm",
+  "version": "0.0.1",
+  "description": "An ubuntu 16.04 image with node installed",
+  "scripts": {
+    "build": "docker build -t ubuntu-nvm",
+    "publish": "docker push hibes/ubuntu-nvm:tagname"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hibes/ubuntu-nvm.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hibes/ubuntu-nvm/issues"
+  },
+  "homepage": "https://github.com/hibes/ubuntu-nvm#readme"
+}
