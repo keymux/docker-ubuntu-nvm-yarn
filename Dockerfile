@@ -17,12 +17,14 @@ RUN apt update && apt install -y -q --no-install-recommends \
     wget
 
 ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 7.7.3
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
     && source $NVM_DIR/nvm.sh \
     && mkdir -p /usr/local/nvm/versions/ \
-    && nvm install 7 \
-    && nvm use 7
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
 
-RUN echo 'NODE_PATH=$(find $NVM_DIR/versions/v7* -maxdepth 2 -name "node_modules" | tail -n 1)' >> ~/.bashrc \
-    && echo 'PATH=$(find $NVM_DIR/versions/v7* -maxdepth 1 -name "bin" | tail -n 1):$PATH' >> ~/.bashrc
+ENV NODE_PATH $NVM_DIR/versions/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/v$NODE_VERSION/bin:$PATH
