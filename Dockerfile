@@ -16,6 +16,7 @@ RUN apt update && apt install -y -q --no-install-recommends \
     software-properties-common \
     wget
 
+ENV NODE_VERSION node
 ENV NVM_DIR /usr/local/nvm
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/hibes/ubuntu-nvm.git"
   },
-  "author": "",
+  "author": "Henry Brown",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hibes/ubuntu-nvm/issues"
