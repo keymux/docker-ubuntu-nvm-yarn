@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
@@ -17,14 +17,6 @@ RUN apt update && apt install -y -q --no-install-recommends \
     wget
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 7.7.3
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
-    && source $NVM_DIR/nvm.sh \
-    && mkdir -p /usr/local/nvm/versions/ \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
-
-ENV NODE_PATH $NVM_DIR/versions/v$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/versions/v$NODE_VERSION/bin:$PATH
+    && source $NVM_DIR/nvm.sh
