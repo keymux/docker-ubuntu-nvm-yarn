@@ -5,7 +5,7 @@ pipeline {
     stage("build") {
       steps {
         parallel (
-          sh 'docker build -t $(basename $(pwd))'
+          "build": { sh 'docker build -t $(basename $(pwd))' }
         )
       }
     }
