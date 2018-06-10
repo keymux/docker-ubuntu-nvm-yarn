@@ -1,11 +1,11 @@
 {
-  "name": "docker-ubuntu-nvm",
+  "name": "docker-ubuntu-nvm-yarn",
   "version": "0.1.0",
-  "description": "An ubuntu 18.04 image with nvm installed",
+  "description": "An ubuntu 18.04 docker image with nvm and yarn installed",
   "scripts": {
-    "build": "docker build -t keymux/docker-ubuntu-nvm .",
+    "build": "docker build -t keymux/docker-ubuntu-nvm-yarn .",
     "publish": "scripts/publish.sh",
-    "start": "docker run --rm -ti keymux/docker-ubuntu-nvm /bin/bash"
+    "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash"
   },
   "license": "MIT"
 }
