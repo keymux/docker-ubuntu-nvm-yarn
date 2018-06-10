@@ -5,6 +5,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 RUN apt update && apt install -y -q --no-install-recommends \
+    ca-certificates \
     curl
 
 ENV NVM_DIR /usr/local/nvm
