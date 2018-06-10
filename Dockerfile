@@ -17,6 +17,7 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | b
     && source $NVM \
     && mkdir -p $NVM_DIR/versions \
     && V=$(nvm ls-remote | tail -n 1) \
+    && nvm install ${V} \
     && nvm use ${V}
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
