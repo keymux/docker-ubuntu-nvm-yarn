@@ -7,7 +7,7 @@ pipeline {
     stage("build") {
       steps {
         parallel (
-          "build": { sh 'docker build -t $(cat package.json | jq ".name")' }
+          "build": { sh 'docker build -t $(cat package.json | jq ".name") .' }
         )
       }
     }
