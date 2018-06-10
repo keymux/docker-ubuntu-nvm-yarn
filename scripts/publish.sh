@@ -30,4 +30,5 @@ check_version() {
   fi
 }
 
-main $@
+#main $@
+docker tag keymux/docker-ubuntu-nvm-yarn:latest keymux/docker-ubuntu-nvm-yarn:$(cat package.json | jq -r .version)
