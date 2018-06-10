@@ -1,20 +1,11 @@
 {
-  "name": "ubuntu-nvm",
-  "version": "0.0.2",
-  "description": "An ubuntu 16.04 image with node installed",
+  "name": "keymux/docker-ubuntu-nvm-yarn",
+  "version": "0.1.0",
+  "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
-    "build": "docker build -t hibes/ubuntu-nvm .",
+    "build": "docker build -t keymux/docker-ubuntu-nvm-yarn .",
     "publish": "scripts/publish.sh",
-    "start": "docker run --rm -ti hibes/ubuntu-nvm /bin/bash"
+    "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hibes/ubuntu-nvm.git"
-  },
-  "author": "Henry Brown",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hibes/ubuntu-nvm/issues"
-  },
-  "homepage": "https://github.com/hibes/ubuntu-nvm#readme"
+  "license": "MIT"
 }

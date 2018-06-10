@@ -1,30 +1,20 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
+ENV NVM_DIR /usr/local/nvm
+
 RUN apt update && apt install -y -q --no-install-recommends \
-    apt-transport-https \
-    build-essential \
     ca-certificates \
     curl \
-    git \
-    libssl-dev \
-    python \
-    rsync \
-    software-properties-common \
-    wget
-
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 7.7.3
+    gnupg
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
     && source $NVM_DIR/nvm.sh \
-    && mkdir -p /usr/local/nvm/versions/ \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
+    && nvm install
 
-ENV NODE_PATH $NVM_DIR/versions/v$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/versions/v$NODE_VERSION/bin:$PATH
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+  && apt update && apt install -y -q --no-install-recommends yarn
