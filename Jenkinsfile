@@ -5,7 +5,7 @@ pipeline {
     stage("build") {
       steps {
         parallel (
-          sh 'echo TODO'
+          sh 'docker build -t $(basename $(pwd))'
         )
       }
     }

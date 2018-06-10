@@ -1,7 +1,7 @@
 {
   "name": "docker-ubuntu-nvm-yarn",
   "version": "0.1.0",
-  "description": "An ubuntu 18.04 docker image with nvm and yarn installed",
+  "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
     "build": "docker build -t keymux/docker-ubuntu-nvm-yarn .",
     "publish": "scripts/publish.sh",
