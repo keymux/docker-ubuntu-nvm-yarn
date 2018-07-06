@@ -44,6 +44,7 @@ node("docker") {
       def steps = versions.inject([:]) { m, version ->
         return m + [(version): {
           nvm("scripts/test_version.sh " + version)
+          nvm("scripts/test:integration.sh")
         }]
       }
 
