@@ -7,6 +7,7 @@
     "prevent_clobber": "node scripts/prevent_clobber.js",
     "push": "scripts/push.sh",
     "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash",
+    "git_tag": "scripts/git_tag.sh",
     "test:version": "scripts/test_version.sh"
   },
   "license": "MIT",
