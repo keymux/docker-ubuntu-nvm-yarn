@@ -1,4 +1,6 @@
 node("docker") {
+  checkout scm
+
   stage ("Introspection") {
     sh("pwd")
     sh("env")
