@@ -7,10 +7,23 @@ node("docker") {
     checkout scm
 
     stage ("Introspection") {
-      nvm("pwd")
-      nvm("env")
-      nvm("node -v")
-      nvm("yarn -v")
+      def cmds = [
+        "pwd",
+        "node -v",
+        "yarn -v",
+        "id -u",
+        "groups",
+        "cat /etc/group | grep docker",
+        "ls -al /var/run/docker.sock"
+      ]
+
+      def steps = cmds.inject([:]) { m, cmd ->
+        return m + [(cmd): {
+          nvm(cmd)
+        }]
+      }
+
+      parallel(steps)
     }
 
     stage ("Dependencies") {
