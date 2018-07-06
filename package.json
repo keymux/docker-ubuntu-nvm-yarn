@@ -9,7 +9,7 @@
     "push": "scripts/push.sh",
     "start": "scripts/start.sh",
     "test:version": "scripts/test_version.sh",
-    "validate_workflow": "scripts/validate_workflow.js"
+    "validate_workflow": "node scripts/validate_workflow.js"
   },
   "license": "MIT",
   "devDependencies": {
