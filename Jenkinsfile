@@ -1,13 +1,15 @@
 node("docker") {
   checkout scm
 
-  stage ("Dependencies") {
-    sh("yarn")
-  }
-
   stage ("Introspection") {
     sh("pwd")
     sh("env")
+    sh("node -v")
+    sh("yarn -v")
+  }
+
+  stage ("Dependencies") {
+    sh("yarn")
   }
 
   stage ("Build") {
