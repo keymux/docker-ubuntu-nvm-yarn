@@ -1,11 +1,11 @@
 {
   "name": "@keymux/docker-ubuntu-nvm-yarn",
-  "version": "0.2.0",
+  "version": "0.2.0-alpha.1",
   "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
     "build": "scripts/build.sh",
     "prevent_clobber": "node scripts/prevent_clobber.js",
-    "publish": "scripts/publish.sh",
+    "push": "scripts/push.sh",
     "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash",
     "test:version": "scripts/test_version.sh"
   },
