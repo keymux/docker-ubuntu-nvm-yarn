@@ -1,15 +1,9 @@
 node("docker") {
-  stages {
-    stage("build") {
-      steps {
-        sh("scripts/build.sh")
-      }
-    }
+  stage ("Build") {
+    sh("scripts/build.sh")
+  }
 
-    stage("test") {
-      steps {
-        sh("scripts/test.sh")
-      }
-    }
+  stage ("Test") {
+    sh("scripts/test.sh")
   }
 }
