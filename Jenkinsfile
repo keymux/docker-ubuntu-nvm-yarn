@@ -12,6 +12,7 @@ node("docker") {
         "node -v",
         "yarn -v",
         "id -u",
+        "id -g",
         "groups",
         "cat /etc/group",
         "cat /etc/passwd",
