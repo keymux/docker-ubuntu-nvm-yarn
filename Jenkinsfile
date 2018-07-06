@@ -54,5 +54,9 @@ node("docker") {
     stage ("Check if Tag Exists") {
       nvm("yarn prevent_clobber")
     }
+
+    stage ("Validate Workflow") {
+      nvm("yarn validate_workflow")
+    }
   }
 }
