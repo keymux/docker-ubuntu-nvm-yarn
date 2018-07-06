@@ -8,6 +8,7 @@ node("docker") {
 
     stage ("Introspection") {
       def cmds = [
+        "env",
         "pwd",
         "node -v",
         "yarn -v",
