@@ -55,7 +55,7 @@ node("docker") {
     }
 
     stage ("Dependencies") {
-      nvm("yarn")
+      nvm("yarn install --frozen-lockfile")
     }
 
     stage ("Build") {
@@ -84,6 +84,22 @@ node("docker") {
       def steps = mapToSteps(fn, versions)
 
       parallel(steps)
+    }
+
+    stage ("Reporting") {
+      reports = [
+        "unit"
+      ]
+
+      parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, reports))
+    }
+
+    stage ("Post report") {
+      // If this is a pull request, submit a comment
+      if (env.BRANCH_NAME =~ /^PR-/) {
+        nvm("yarn submit:aggregate")
+        nvm("yarn submit:comment")
+      }
     }
 
     stage ("Validate Workflow") {
