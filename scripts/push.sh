@@ -12,7 +12,8 @@ main() {
 
   describe=$(git describe --dirty)
 
-  if check_version $describe; then
+  if node "${SCRIPTS_DIR}/prevent_clobber.js" \
+    && check_version $describe; then
     yarn build
 
     docker push ${I}:latest && \
@@ -36,5 +37,7 @@ check_version() {
   fi
 }
 
+main $@
+
 #main $@
-docker tag keymux/docker-ubuntu-nvm-yarn:latest keymux/docker-ubuntu-nvm-yarn:$(cat package.json | jq -r .version)
+#docker tag keymux/docker-ubuntu-nvm-yarn:latest keymux/docker-ubuntu-nvm-yarn:$(cat package.json | jq -r .version)
