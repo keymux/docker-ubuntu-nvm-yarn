@@ -9,4 +9,4 @@ fi
 nvm install ${NODE_VERSION} > /dev/null
 nvm use ${NODE_VERSION} > /dev/null
 
-$@
+exec "$@"
