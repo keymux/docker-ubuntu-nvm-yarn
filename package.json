@@ -1,11 +1,23 @@
 {
-  "name": "keymux/docker-ubuntu-nvm-yarn",
-  "version": "0.1.0",
+  "name": "@keymux/docker-ubuntu-nvm-yarn",
+  "version": "0.2.0-alpha.2",
   "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
-    "build": "docker build -t keymux/docker-ubuntu-nvm-yarn .",
-    "publish": "scripts/publish.sh",
-    "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash"
+    "build": "scripts/build.sh",
+    "git_tag": "scripts/git_tag.sh",
+    "prevent_clobber": "node scripts/prevent_clobber.js",
+    "push": "scripts/push.sh",
+    "start": "scripts/start.sh",
+    "test:version": "scripts/test_version.sh",
+    "validate_workflow": "node scripts/validate_workflow.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
+    "semver": "^5.5.0",
+    "winston": "^3.0.0"
+  }
 }
