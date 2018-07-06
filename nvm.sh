@@ -10,6 +10,4 @@ fi
 
 nvm use ${NODE_VERSION} > /dev/null
 
-node -v
-
 "$@"
