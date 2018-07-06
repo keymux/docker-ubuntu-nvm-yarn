@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 . ${NVM}
 
 if [ -z "${NODE_VERSION}" ]; then
