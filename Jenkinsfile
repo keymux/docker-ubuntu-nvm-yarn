@@ -58,5 +58,11 @@ node("docker") {
     stage ("Validate Workflow") {
       nvm("yarn validate_workflow")
     }
+
+    if (env.BRANCH_NAME == "develop") {
+      nvm("yarn git_tag")
+
+      nvm("yarn push")
+    }
   }
 }
