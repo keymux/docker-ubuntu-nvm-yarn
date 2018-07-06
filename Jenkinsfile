@@ -1,5 +1,5 @@
 node("docker") {
-  docker.image("keymux/docker-ubuntu-nvm-yarn:0.1.0").inside() {
+  docker.image("keymux/docker-ubuntu-nvm-yarn:0.2.0-alpha.1").inside() {
     checkout scm
 
     stage ("Introspection") {
