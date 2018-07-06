@@ -16,7 +16,8 @@ node("docker") {
         "groups",
         "cat /etc/group",
         "cat /etc/passwd",
-        "ls -al /var/run/docker.sock"
+        "ls -al /var/run/docker.sock",
+        "id"
       ]
 
       def steps = cmds.inject([:]) { m, cmd ->
