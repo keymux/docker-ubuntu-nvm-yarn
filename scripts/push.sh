@@ -10,7 +10,7 @@ main() {
   V=$(node -e 'console.log(require("./package.json").version);')
   I=${DOCKER_IMAGE_NAME}
 
-  describe=$(git describe --dirty)
+  describe=$(git describe --tags --dirty)
 
   if node "${SCRIPTS_DIR}/prevent_clobber.js" \
     && check_version $describe; then
