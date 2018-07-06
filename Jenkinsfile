@@ -1,20 +1,24 @@
+def nvm = {
+  e -> sh("/nvm.sh " + e)
+}
+
 node("docker") {
-  docker.image("keymux/docker-ubuntu-nvm-yarn:0.2.0-alpha.1").inside() {
+  docker.image("keymux/docker-ubuntu-nvm-yarn:0.2.0-alpha.1").inside("--entrypoint=''") {
     checkout scm
 
     stage ("Introspection") {
-      sh("pwd")
-      sh("env")
-      sh("node -v")
-      sh("yarn -v")
+      nvm("pwd")
+      nvm("env")
+      nvm("node -v")
+      nvm("yarn -v")
     }
 
     stage ("Dependencies") {
-      sh("yarn")
+      nvm("yarn")
     }
 
     stage ("Build") {
-      sh("yarn build")
+      nvm("yarn build")
     }
 
     stage ("Test") {
@@ -22,7 +26,7 @@ node("docker") {
 
       def steps = versions.inject([:]) { m, version ->
         return m + [(version): {
-          sh("scripts/test_version.sh " + version)
+          nvm("scripts/test_version.sh " + version)
         }]
       }
 
@@ -30,7 +34,7 @@ node("docker") {
     }
 
     stage ("Check if Tag Exists") {
-      sh("yarn prevent_clobber")
+      nvm("yarn prevent_clobber")
     }
   }
 }

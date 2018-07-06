@@ -27,7 +27,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
   && apt update \
   && apt install -y -q --no-install-recommends yarn
 
-COPY entrypoint.sh /entrypoint.sh
+COPY nvm.sh /nvm.sh
 
 RUN useradd -d "${HOME}" "${USER}" \
   && chown -R ${USER} ${NVM_DIR}
@@ -40,5 +40,5 @@ RUN source $NVM \
   && nvm install ${V} \
   && nvm use ${V}
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/nvm.sh"]
 CMD ["node", "-v"]
