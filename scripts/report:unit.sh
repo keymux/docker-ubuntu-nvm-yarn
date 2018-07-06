@@ -8,7 +8,7 @@ SCRIPTS_DIR="${SCRIPTS_DIR:?}"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 UNIT_DIR="${ROOT_DIR}/test/unit"
 REPORT_DIR="${ROOT_DIR}/reports/unit"
-MARKDOWN_FILE="${ROOT_DIR}/reports/mochawesome.md"
+MARKDOWN_FILE="${ROOT_DIR}/reports/test:unit.md"
 
 yarn mocha \
   --recursive \

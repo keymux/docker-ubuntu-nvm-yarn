@@ -25,14 +25,22 @@ def dockerArgs = args.join(' ')
 def allDockerArgs = [dockerVolsArgs, dockerArgs].join(" ")
 
 node("docker") {
+  def url = CHANGE_URL.replaceAll('/[^/]+/[^/]+$', "")
+
+  //properties([$class: 'GithubProjectProperty', displayName: '', projectUrlStr: url])
+
   docker
     .image(imageAndTag)
     .inside(allDockerArgs)
   {
     checkout scm
 
-    //def mapToSteps = { fn, list -> list.inject([:]) { m, v -> return m + [(v): { fn(v) }] } }
     def mapToSteps = load("src/build/map_to_steps.groovy")
+    //def postCommentFileCreator = load("src/build/post_comment_file_creator.groovy")
+
+    stage ("Clean") {
+      nvm("git clean -xdf")
+    }
 
     stage ("Introspection") {
       def cmds = [
@@ -62,7 +70,7 @@ node("docker") {
       nvm("yarn build")
     }
 
-    stage ("Test Versions") {
+    stage ("Integration Tests") {
       def fn = { version ->
         nvm("yarn test:version ${version}")
         nvm("yarn test:integration")
@@ -97,8 +105,19 @@ node("docker") {
     stage ("Post report") {
       // If this is a pull request, submit a comment
       if (env.BRANCH_NAME =~ /^PR-/) {
-        nvm("yarn submit:aggregate")
-        nvm("yarn submit:comment")
+        def s = { x -> sh(x) }
+        def g = { x -> githubPRComment(
+          comment: githubPRMessage(content: "test ${x}"),
+          errorHandler: statusOnPublisherError('UNSTABLE')
+        )}
+
+        nvm("yarn report:aggregate")
+
+        withCredentials([string(credentialsId: "jenkins-hibes_github_access_token", variable: "GITHUB_ACCESS_TOKEN")]) {
+          nvm("yarn submit:comment")
+
+          //postCommentFileCreator(s, g)("reports/report.md")
+        }
       }
     }
 
@@ -106,27 +125,25 @@ node("docker") {
       nvm("yarn validate_workflow")
     }
 
-    // If this is a new changeset on master
-    if (env.BRANCH_NAME == "master") {
-      stage ("Deploy master branch") {
+    stage ("Deploy") {
+      // If this is a new changeset on master
+      if (env.BRANCH_NAME == "master") {
         nvm("yarn prevent_clobber")
 
         nvm("yarn git_tag")
 
         nvm("yarn push")
-      }
-    }
+      } else if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
+      // If this is a new changeset on develop
+        def wouldClobber = nvmTest("yarn prevent_clobber")
 
-    // If this is a new changeset on develop
-    if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
-      def wouldClobber = nvmTest("yarn prevent_clobber")
-
-      if (wouldClobber == 0) {
-        stage ("Deploy develop branch") {
+        if (wouldClobber == 0) {
           nvm("yarn git_tag")
 
           nvm("yarn push")
         }
+      } else {
+        echo("Nothing to do")
       }
     }
   }

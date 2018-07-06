@@ -1,6 +1,17 @@
 const { validateWorkflow } = require("../src/validate_workflow.js");
 
-validateWorkflow(process.env)
+const { env } = process;
+const { spawnSync } = require("child_process");
+
+Promise.resolve(env)
+  .then(env =>
+    Object.assign(env, {
+      DIRTY_TAG:
+        env.DIRTY_TAG ||
+        spawnSync("git", ["--dirty", "--tags", "--always"]).stdout.toString(),
+    })
+  )
+  .then(validateWorkflow)
   .then(process.exit)
   .catch(err => {
     console.error(JSON.stringify(rpOptions, null, 2));

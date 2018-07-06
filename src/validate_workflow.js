@@ -1,6 +1,6 @@
 const validateWorkflow = env => {
   return new Promise((resolve, reject) => {
-    const { BRANCH_NAME, CHANGE_BRANCH, CHANGE_TARGET } = env;
+    const { BRANCH_NAME, CHANGE_BRANCH, CHANGE_TARGET, DIRTY_TAG } = env;
 
     const masterBranch = new RegExp(/^master$/i);
     const developBranch = new RegExp(/^(dev)|(develop)$/i);
@@ -8,6 +8,8 @@ const validateWorkflow = env => {
     const feature = new RegExp(/^feature\//);
     const bugfix = new RegExp(/^bugfix\//);
     const release = new RegExp(/^release\//);
+
+    const semver = new RegExp(/^[0-9]+\.[0-9]+\.[0-9]+$/);
 
     const PR = new RegExp(/^PR-/);
 
@@ -59,7 +61,7 @@ const validateWorkflow = env => {
      * Only allow release branches to merge to master
      */
     if (masterBranch.test(CHANGE_TARGET)) {
-      if (release.test(CHANGE_BRANCH)) {
+      if (release.test(CHANGE_BRANCH) && semver.test(DIRTY_TAG)) {
         pass();
       } else {
         fail();
