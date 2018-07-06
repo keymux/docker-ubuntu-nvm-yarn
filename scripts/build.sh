@@ -7,11 +7,7 @@ ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 . "${SCRIPTS_DIR}/lib.sh"
 
 buildDockerImage() {
-  set -x
-
   docker build -t "${DOCKER_IMAGE_NAME}" .
-
-  set +x
 }
 
 buildDockerImage
