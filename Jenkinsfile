@@ -11,7 +11,7 @@ node("docker") {
   }
 
   stage ("Build") {
-    sh("scripts/build.sh")
+    sh("yarn build")
   }
 
   stage ("Test") {
@@ -27,6 +27,6 @@ node("docker") {
   }
 
   stage ("Check if Tag Exists") {
-    sh("node scripts/prevent_clobber.js")
+    sh("yarn prevent_clobber")
   }
 }

@@ -1,10 +1,33 @@
 const path = require("path");
 const rp = require("request-promise");
-const semver = require("semver");
+
+const {
+  createLogger,
+  format: { combine, printf, timestamp },
+  transports,
+} = require("winston");
+
+const { compareSemversCreator } = require("../src/compare_semvers");
+
+const compareSemvers = compareSemversCreator(
+  createLogger({
+    format: combine(
+      timestamp(),
+      printf(i => `${i.timestamp} ${i.level}: ${i.message}`)
+    ),
+    level: process.env.LOG_LEVEL || "info",
+    transports: [
+      new transports.Console({
+        stderrLevels: ["error", "warn", "info", "verbose", "debug", "silly"],
+      }),
+    ],
+  })
+);
 
 const packageJson = require(path.resolve("package.json"));
 const dockerImageName = packageJson.name.replace(/^@/, "");
-const packageJsonVersion = packageJson.version;
+const packageJsonVersion =
+  process.env.OVERRIDE_VERSION_CHECK || packageJson.version;
 
 const rpOptions = {
   headers: {
@@ -22,28 +45,8 @@ rp(rpOptions)
       .map(x => results[x].name)
       .filter(x => x !== "latest")
   )
-  .then(versions => {
-    const willNotClobber = versions.reduce(
-      (acc, version) => acc && semver.gt(packageJsonVersion, version),
-      true
-    );
-
-    if (willNotClobber) {
-      console.error(
-        `${packageJsonVersion} was greater than all of ${JSON.stringify(
-          versions
-        )}`
-      );
-    } else {
-      console.error(
-        `${packageJsonVersion} is not safe because it is not greater than one of ${JSON.stringify(
-          versions
-        )}`
-      );
-
-      process.exit(-2);
-    }
-  })
+  .then(versions => compareSemvers(versions, packageJsonVersion))
+  .then(pass => process.exit(pass ? 0 : -1))
   .catch(err => {
     console.error(JSON.stringify(rpOptions, null, 2));
 
