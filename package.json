@@ -8,11 +8,16 @@
     "prevent_clobber": "node scripts/prevent_clobber.js",
     "push": "scripts/push.sh",
     "start": "scripts/start.sh",
+    "report": "BODY_FILE=reports/githubCommentFile github_cli createAnIssueComment",
+    "report:deploy_plan": "scripts/report:deploy_plan.js",
+    "test:integration": "scripts/test:integration.sh",
+    "test:unit": "scripts/test:unit.sh",
     "test:version": "scripts/test_version.sh",
     "validate_workflow": "node scripts/validate_workflow.js"
   },
   "license": "MIT",
   "devDependencies": {
+    "@keymux/github_cli": "^0.1.7",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "request": "^2.87.0",

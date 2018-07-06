@@ -2,6 +2,25 @@
 # yarn lockfile v1
 
 
+"@keymux/github_cli@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@keymux/github_cli/-/github_cli-0.1.7.tgz#9ce8b4d1a12ac428a5055f61654dc7ad032471f9"
+  dependencies:
+    "@keymux/promisrfs" "^0.1.1"
+    minimist "^1.2.0"
+    request "^2.87.0"
+    request-promise "^4.2.2"
+
+"@keymux/promisr@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@keymux/promisr/-/promisr-0.1.0.tgz#d44928ef9742ac5226040a74b27e1aa980d8230c"
+
+"@keymux/promisrfs@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@keymux/promisrfs/-/promisrfs-0.1.1.tgz#beed7e47bb243f0fd4c6698030a2bfcedae919af"
+  dependencies:
+    "@keymux/promisr" "0.1.0"
+
 ajv@^5.1.0:
   version "5.5.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
@@ -384,6 +403,10 @@ minimatch@3.0.4, minimatch@^3.0.4:
 minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
+
+minimist@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
 mkdirp@0.5.1:
   version "0.5.1"
