@@ -27,8 +27,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
   && apt update \
   && apt install -y -q --no-install-recommends yarn
 
-COPY nvm.sh /nvm.sh
-
 RUN useradd -d "${HOME}" "${USER}" \
   && chown -R ${USER} ${NVM_DIR}
 
@@ -39,6 +37,8 @@ RUN source $NVM \
   && V=$(nvm ls-remote | tail -n 1) \
   && nvm install ${V} \
   && nvm use ${V}
+
+COPY nvm.sh /nvm.sh
 
 ENTRYPOINT ["/nvm.sh"]
 CMD ["node", "-v"]
