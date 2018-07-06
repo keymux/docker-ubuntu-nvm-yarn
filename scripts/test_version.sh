@@ -10,4 +10,5 @@ docker run \
   -e "NODE_VERSION=${1}" \
   -v "${SCRIPTS_DIR}/test_entrypoint.sh:/test_entrypoint.sh:ro" \
   --entrypoint "/test_entrypoint.sh" \
+  --rm \
   "${DOCKER_IMAGE_NAME}"

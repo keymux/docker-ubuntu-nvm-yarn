@@ -1,8 +1,6 @@
 def nvm = { e -> sh("/nvm.sh ${e}") }
 def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
 
-def mapToSteps = evaluate(new File("src/build/map_to_steps.groovy"))
-
 def versions = ["6.10.2", "6", "7", "8.10", "8", "9", "10"]
 
 def image = "keymux/docker-ubuntu-nvm-yarn"
@@ -13,17 +11,18 @@ def dockerVols = [
   "/var/run/docker.sock",
   "/usr/bin/docker",
   "/usr/lib/x86_64-linux-gnu/libltdl.so.7"
-].collect { "${it}:${it}" }
+].collect { "-v ${it}:${it}" }
 
 // TODO: User and Group ID should be determined from the host here
 def args = [
-  "--entrypoint=''",
+  "--entrypoint",
+  "''",
   "-u 1000:999"
 ]
 
-def dockerVolsArgs = "${dockerVols.join(' ')} ${args.join(' ')}"
-def dockerArgs = "${args.join(' ')}"
-def allDockerArgs = [${dockerVolsArgs}, ${dockerArgs}].join(" ")
+def dockerVolsArgs = dockerVols.join(' ')
+def dockerArgs = args.join(' ')
+def allDockerArgs = [dockerVolsArgs, dockerArgs].join(" ")
 
 node("docker") {
   docker
@@ -31,6 +30,9 @@ node("docker") {
     .inside(allDockerArgs)
   {
     checkout scm
+
+    //def mapToSteps = { fn, list -> list.inject([:]) { m, v -> return m + [(v): { fn(v) }] } }
+    def mapToSteps = load("src/build/map_to_steps.groovy")
 
     stage ("Introspection") {
       def cmds = [
@@ -73,9 +75,10 @@ node("docker") {
 
     stage ("Unit Tests") {
       def fn = { version ->
-        docker.image(imageAndTag).inside(dockerArgs) {
-          nvm("yarn test:unit")
-        }
+        def lArgs = "-v ${WORKSPACE}:${WORKSPACE}:ro -w ${WORKSPACE}"
+        def cmd = "yarn test:unit"
+
+        nvm("docker run ${lArgs} --rm ${imageAndTag} ${cmd}")
       }
 
       def steps = mapToSteps(fn, versions)

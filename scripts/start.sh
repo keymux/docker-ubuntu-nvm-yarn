@@ -11,4 +11,6 @@ docker run \
   -v "/var/run/docker.sock:/var/run/docker.sock:rw" \
   -v "/usr/bin/docker:/usr/bin/docker:ro" \
   -v "/usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7:ro" \
-  --rm "${DOCKER_IMAGE_NAME}" $@
+  --rm \
+  "${DOCKER_IMAGE_NAME}" \
+  $@

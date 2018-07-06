@@ -7,7 +7,7 @@ ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 . "${SCRIPTS_DIR}/lib.sh"
 
 test_version() {
-  version="$(docker run -e "NODE_VERSION=${1}" -v "${SCRIPTS_DIR}/test_entrypoint.sh:/test_entrypoint.sh:ro" --entrypoint "/test_entrypoint.sh" "${DOCKER_IMAGE_NAME}")"
+  version="$(docker run --rm -e "NODE_VERSION=${1}" -v "${SCRIPTS_DIR}/test_entrypoint.sh:/test_entrypoint.sh:ro" --entrypoint "/test_entrypoint.sh" "${DOCKER_IMAGE_NAME}")"
 
   if echo "$version" | grep -E "^[v]?${1}"; then
     return 0
