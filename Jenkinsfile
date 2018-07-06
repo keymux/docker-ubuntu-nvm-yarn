@@ -1,6 +1,8 @@
 node("docker") {
   checkout scm
 
+  sh(". $HOME/.nvm/nvm.sh")
+
   stage ("Introspection") {
     sh("pwd")
     sh("env")
