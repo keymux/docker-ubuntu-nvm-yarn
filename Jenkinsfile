@@ -1,6 +1,10 @@
 node("docker") {
   checkout scm
 
+  stage ("Dependencies") {
+    sh("yarn")
+  }
+
   stage ("Introspection") {
     sh("pwd")
     sh("env")
@@ -20,5 +24,9 @@ node("docker") {
     }
 
     parallel(steps)
+  }
+
+  stage ("Check if Tag Exists") {
+    sh("node scripts/prevent_clobber.js")
   }
 }

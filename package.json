@@ -1,5 +1,5 @@
 {
-  "name": "keymux/docker-ubuntu-nvm-yarn",
+  "name": "@keymux/docker-ubuntu-nvm-yarn",
   "version": "0.2.0",
   "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
@@ -7,5 +7,10 @@
     "publish": "scripts/publish.sh",
     "start": "docker run --rm -ti keymux/docker-ubuntu-nvm-yarn /bin/bash"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
+    "semver": "^5.5.0"
+  }
 }

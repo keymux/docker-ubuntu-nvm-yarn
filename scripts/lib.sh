@@ -16,4 +16,4 @@ whichOrExit() {
 
 whichOrExit jq
 
-DOCKER_IMAGE_NAME="$(cat "${ROOT_DIR}/package.json" | jq -r ".name")"
+DOCKER_IMAGE_NAME="$(cat "${ROOT_DIR}/package.json" | jq -r ".name" | sed 's/^@//')"
