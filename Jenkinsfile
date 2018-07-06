@@ -1,14 +1,14 @@
-pipeline {
-  agent {
-    label "docker"
-  }
-
+node("docker") {
   stages {
     stage("build") {
       steps {
-        parallel (
-          "build": { sh 'docker build -t $(cat package.json | jq -r ".name") .' }
-        )
+        sh("scripts/build.sh")
+      }
+    }
+
+    stage("test") {
+      steps {
+        sh("scripts/test.sh")
       }
     }
   }

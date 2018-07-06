@@ -1,13 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
+SCRIPTS_DIR="${SCRIPTS_DIR:?}"
+ROOT_DIR=$(realpath "${SCRIPTS_DIR}/..")
+
+. "${SCRIPTS_DIR}/lib.sh"
 
 main() {
   V=$(node -e 'console.log(require("./package.json").version);')
-  I=hibes/ubuntu-nvm
+  I=${DOCKER_IMAGE_NAME}
 
   describe=$(git describe --dirty)
 
   if check_version $describe; then
-    npm run build
+    yarn build
 
     docker push ${I}:latest && \
       docker tag ${I} ${I}:${V} && \
