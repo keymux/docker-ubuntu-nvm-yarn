@@ -13,7 +13,8 @@ node("docker") {
         "yarn -v",
         "id -u",
         "groups",
-        "cat /etc/group | grep docker",
+        "cat /etc/group",
+        "cat /etc/passwd",
         "ls -al /var/run/docker.sock"
       ]
 
