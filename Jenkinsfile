@@ -21,7 +21,7 @@ node("docker") {
 
       def steps = cmds.inject([:]) { m, cmd ->
         return m + [(cmd): {
-          nvm(cmd)
+          sh("/nvm.sh " + cmd)
         }]
       }
 
