@@ -19,10 +19,13 @@ RUN apt update \
     ca-certificates \
     curl \
     git \
-    gnupg
+    gnupg \
+    jq
 
 RUN mkdir -p "${NVM_DIR}" \
+  && groupadd -g 999 "docker" \
   && useradd -d "${NVM_DIR}" "${USER}" \
+  && usermod -a -G "docker" "${USER}" \
   && chown -R ${USER} ${NVM_DIR} \
   && chmod -R u+rw ${NVM_DIR}
 

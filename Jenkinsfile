@@ -3,7 +3,7 @@ def nvm = {
 }
 
 node("docker") {
-  docker.image("keymux/docker-ubuntu-nvm-yarn:0.2.0-alpha.1").inside("--entrypoint=''") {
+  docker.image("keymux/docker-ubuntu-nvm-yarn:0.2.0-alpha.1").inside("-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker:ro -v /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7:ro --entrypoint=''") {
     checkout scm
 
     stage ("Introspection") {
