@@ -9,13 +9,6 @@ const release = new RegExp(/^release\//);
 
 const PR = new RegExp(/^PR-/);
 
-const regexes = [feature, bugfix, release];
-
-const noNeedToValidate = regexes.reduce(
-  (acc, regex) => acc || regex.test(BRANCH_NAME),
-  false
-);
-
 const quit = (code = -1) => process.exit(code);
 
 const pass = () => {
@@ -38,6 +31,13 @@ const fail = () => {
   );
   quit();
 };
+
+const regexes = [feature, bugfix, release, masterBranch, developBranch];
+
+const noNeedToValidate = regexes.reduce(
+  (acc, regex) => acc || regex.test(BRANCH_NAME),
+  false
+);
 
 if (noNeedToValidate) {
   console.error("Not a pull request -- no need to validate workflow");
