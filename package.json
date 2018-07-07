@@ -1,6 +1,6 @@
 {
   "name": "@keymux/docker-ubuntu-nvm-yarn",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0-alpha.3",
   "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
     "build": "scripts/build.sh",
@@ -8,13 +8,25 @@
     "prevent_clobber": "node scripts/prevent_clobber.js",
     "push": "scripts/push.sh",
     "start": "scripts/start.sh",
+    "preview:comment": "markdown-preview -P remark reports/report.md",
+    "report:aggregate": "scripts/report:aggregate.sh",
+    "report:deploy": "node scripts/report:deploy.js",
+    "report:unit": "scripts/report:unit.sh",
+    "submit:comment": "scripts/submit:comment.sh",
+    "test:integration": "scripts/test:integration.sh",
+    "test:unit": "scripts/test:unit.sh",
     "test:version": "scripts/test_version.sh",
     "validate_workflow": "node scripts/validate_workflow.js"
   },
   "license": "MIT",
   "devDependencies": {
+    "@keymux/github_cli": "^0.1.7",
+    "@keymux/mochawesome_to_markdown": "^0.1.0",
+    "@keymux/promisr": "^0.1.1",
     "chai": "^4.1.2",
+    "markdown-preview": "^0.4.3",
     "mocha": "^5.2.0",
+    "mochawesome": "^3.0.2",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "semver": "^5.5.0",

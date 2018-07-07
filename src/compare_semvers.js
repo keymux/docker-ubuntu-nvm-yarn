@@ -14,6 +14,9 @@ const defaultLogger = {
   emerg: console.error,
 };
 
+/**
+ * @return {boolean} - True if this deployment would be a new version, False if it would clobber
+ */
 const compareSemversCreator = logger => (versions, version) => {
   logger.debug(`Comparing ${version} with ${JSON.stringify(versions)}`);
 

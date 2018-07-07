@@ -2,6 +2,12 @@ FROM ubuntu:18.04
 
 ENV USER nvm
 
+ENV USERID 1001
+ENV USERGID 1005
+ENV USERGNAME jenkins
+ENV DOCKERGID 999
+ENV DOCKERGNAME docker
+
 # Ensure BASH is used for Jenkins pipelines
 # TODO: Better way to accomplish this?
 RUN rm /bin/sh \
@@ -23,9 +29,9 @@ RUN apt update \
     jq
 
 RUN mkdir -p "${NVM_DIR}" \
-  && groupadd -g 999 "docker" \
-  && groupadd -g 1000 "sambashare" \
-  && useradd -g 999 -G "sambashare" -d "${NVM_DIR}" "${USER}" \
+  && groupadd -g ${DOCKERGID} "${DOCKERGNAME}" \
+  && groupadd -g ${USERGID} "${USERGNAME}" \
+  && useradd -u ${USERID} -g ${DOCKERGID} -G "${USERGNAME}" -d "${NVM_DIR}" "${USER}" \
   && chown -R ${USER} ${NVM_DIR} \
   && chmod -R u+rw ${NVM_DIR}
 

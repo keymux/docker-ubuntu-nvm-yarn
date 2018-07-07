@@ -3,7 +3,7 @@ const { expect } = require("chai");
 const { compareSemvers } = require("../../src/compare_semvers.js");
 
 describe("compareSemvers()", () => {
-  const testSets = [
+  const fixtures = [
     {
       input: [["0.1.0", "0.2.0"], "0.2.0"],
       expected: false,
@@ -56,13 +56,13 @@ describe("compareSemvers()", () => {
       it:
         "should detect a minor revision bump as greater than the previous version",
     },
-  ].map(testSet =>
-    Object.assign(testSet, {
-      actual: compareSemvers.apply(null, testSet.input),
+  ].map(fixture =>
+    Object.assign(fixture, {
+      actual: compareSemvers.apply(null, fixture.input),
     })
   );
 
-  testSets.forEach(testSet =>
-    it(testSet.it, () => expect(testSet.actual).to.deep.equal(testSet.expected))
+  fixtures.forEach(fixture =>
+    it(fixture.it, () => expect(fixture.actual).to.deep.equal(fixture.expected))
   );
 });
