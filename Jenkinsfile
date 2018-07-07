@@ -1,30 +1,33 @@
-def nvm = { e -> sh("/nvm.sh ${e}") }
-def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
-
-def versions = ["6.10.2", "6", "7", "8.10", "8", "9", "10"]
-
-def image = "keymux/docker-ubuntu-nvm-yarn"
-def tag = "0.2.0-alpha.1"
-def imageAndTag = "${image}:${tag}"
-
-def dockerVols = [
-  "/var/run/docker.sock",
-  "/usr/bin/docker",
-  "/usr/lib/x86_64-linux-gnu/libltdl.so.7"
-].collect { "-v ${it}:${it}" }
-
-// TODO: User and Group ID should be determined from the host here
-def args = [
-  "--entrypoint",
-  "''",
-  "-u 1000:999"
-]
-
-def dockerVolsArgs = dockerVols.join(' ')
-def dockerArgs = args.join(' ')
-def allDockerArgs = [dockerVolsArgs, dockerArgs].join(" ")
-
 node("docker") {
+  def nvm = { e -> sh("/nvm.sh ${e}") }
+  def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
+
+  def versions = ["6.10.2", "6", "7", "8.10", "8", "9", "10"]
+
+  def image = "keymux/docker-ubuntu-nvm-yarn"
+  def tag = "0.2.0-alpha.1"
+  def imageAndTag = "${image}:${tag}"
+
+  def dockerInDockerVolsArgs = [
+    "/var/run/docker.sock",
+    "/usr/bin/docker",
+    "/usr/lib/x86_64-linux-gnu/libltdl.so.7"
+  ].collect { "-v ${it}:${it}" }.join(" ")
+
+  // TODO: User and Group ID should be determined from the host here
+  def dockerInDockerArgs = [
+    "--entrypoint",
+    "''",
+    "-u 1000:999",
+  ].join(" ")
+
+  def dockerArgs = [
+    "-v ${env.HOME}/.cache/yarn:/usr/local/nvm/.cache/yarn:rw",
+    "-w ${env.WORKSPACE}"
+  ].join(" ")
+
+  def allDockerArgs = "${dockerInDockerVolsArgs} ${dockerInDockerArgs} ${dockerArgs}"
+
   def url = CHANGE_URL.replaceAll('/[^/]+/[^/]+$', "")
 
   //properties([$class: 'GithubProjectProperty', displayName: '', projectUrlStr: url])
@@ -84,10 +87,18 @@ node("docker") {
 
     stage ("Unit Tests") {
       def fn = { version ->
-        def lArgs = "-v ${WORKSPACE}:${WORKSPACE}:ro -w ${WORKSPACE}"
         def cmd = "yarn test:unit"
 
-        nvm("docker run ${lArgs} --rm ${imageAndTag} ${cmd}")
+        def lArgs = [
+          "-v ${env.WORKSPACE}:${env.WORKSPACE}:ro",
+          "${dockerArgs}",
+          "--rm",
+          "${imageAndTag}",
+          "${cmd}"
+        ].join(" ")
+
+
+        nvm("docker run ${lArgs}")
       }
 
       def steps = mapToSteps(fn, versions)
