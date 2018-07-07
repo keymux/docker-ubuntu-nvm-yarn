@@ -63,7 +63,7 @@ node("docker") {
     }
 
     stage ("Dependencies") {
-      nvm("yarn install --frozen-lockfile")
+      nvm("yarn install --frozen-lockfile --prefer-offline")
       nvm("mkdir -p reports")
     }
 
