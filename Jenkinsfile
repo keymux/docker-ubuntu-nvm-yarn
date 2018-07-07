@@ -28,7 +28,7 @@ node("docker") {
 
   def allDockerArgs = "${dockerInDockerVolsArgs} ${dockerInDockerArgs} ${dockerArgs}"
 
-  def url = CHANGE_URL.replaceAll('/[^/]+/[^/]+$', "")
+  //def url = CHANGE_URL.replaceAll('/[^/]+/[^/]+$', "")
 
   //properties([$class: 'GithubProjectProperty', displayName: '', projectUrlStr: url])
 
