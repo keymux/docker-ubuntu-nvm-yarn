@@ -8,7 +8,7 @@
     "prevent_clobber": "node scripts/prevent_clobber.js",
     "push": "scripts/push.sh",
     "start": "scripts/start.sh",
-    "preview:comment": "markdown-preview -P marked reports/report.md",
+    "preview:comment": "markdown-preview -P remark reports/report.md",
     "report:aggregate": "scripts/report:aggregate.sh",
     "report:deploy": "node scripts/report:deploy.js",
     "report:unit": "scripts/report:unit.sh",

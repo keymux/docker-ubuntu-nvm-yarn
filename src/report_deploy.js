@@ -20,16 +20,22 @@ const checkParams = env => {
 };
 
 const getSafeMessage = env =>
-  `![Can deploy](https://images.keymux.org/octicons16/green/cloud-upload.png)\nIf this pull request is merged into \`${
-    env.destinationBranch
-  }\`, \`${env.version}\` will be deployed\n`;
+  [
+    env.safeImageTag,
+    `Target Version: \`${env.version}\``,
+    `If this pull request is merged into \`${env.destinationBranch}\`, \`${
+      env.version
+    }\` will be deployed\n`,
+  ].join("\n\n");
 
 const getUnsafeMessage = env =>
-  `![Cannot deploy](https://images.keymux.org/fontawesome16/red/chain-broken.png)\nCannot deploy \`${
-    env.version
-  }\` upon merging into \`${
-    env.destinationBranch
-  }\` -- it would clobber an existing deployment\n`;
+  [
+    env.unsafeImageTag,
+    `Target Version: \`${env.version}\``,
+    `Cannot deploy \`${env.version}\`, upon merging into \`${
+      env.destinationBranch
+    }\`, it would clobber an existing deployment\n`,
+  ].join("\n\n");
 
 const reportDeploy = env =>
   Promise.resolve(

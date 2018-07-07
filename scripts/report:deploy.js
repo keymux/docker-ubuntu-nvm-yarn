@@ -5,10 +5,20 @@ const { reportDeploy } = require("../src/report_deploy");
 const { promiseMap } = require("@keymux/promisr");
 const { writeFilePromise } = require("@keymux/promisrfs");
 
+const formatImageMd = (message, image) => `![${message}](${image})`;
+
+const SAFE_IMAGE =
+  "https://images.keymux.org/octicons32/green/cloud-upload.png";
+
+const UNSAFE_IMAGE =
+  "https://images.keymux.org/fontawesome32/red/chain-broken.png";
+
 const main = env =>
   Promise.resolve(
     Object.assign({}, process.env, {
       // The markdown file to be written
+      safeImageTag: formatImageMd("Can deploy", SAFE_IMAGE),
+      unsafeImageTag: formatImageMd("Cannot deploy", UNSAFE_IMAGE),
       markdownFile:
         env.MARKDOWN_FILE || path.resolve("reports/report:deploy.md"),
     })
