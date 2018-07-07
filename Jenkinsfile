@@ -148,7 +148,11 @@ node("docker") {
 
         nvm("yarn git_tag")
 
-        nvm("yarn push")
+        withDockerServer() {
+          withDockerRegistry([credentialsId: "docker-keymux"]) {
+            nvm("yarn push")
+          }
+        }
       } else if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
       // If this is a new changeset on develop
         def wouldClobber = nvmTest("yarn prevent_clobber")
