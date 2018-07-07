@@ -64,6 +64,7 @@ node("docker") {
 
     stage ("Dependencies") {
       nvm("yarn install --frozen-lockfile")
+      nvm("mkdir -p reports")
     }
 
     stage ("Build") {
@@ -98,6 +99,10 @@ node("docker") {
       reports = [
         "unit"
       ]
+
+      if (env.BRANCH_NAME =~ /^PR-/) {
+        reports << "deploy"
+      }
 
       parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, reports))
     }

@@ -22,6 +22,10 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@keymux/promisr/-/promisr-0.1.0.tgz#d44928ef9742ac5226040a74b27e1aa980d8230c"
 
+"@keymux/promisr@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@keymux/promisr/-/promisr-0.1.1.tgz#a030aaa92fb08d6d669ed447597a72a00974e413"
+
 "@keymux/promisrfs@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@keymux/promisrfs/-/promisrfs-0.1.1.tgz#beed7e47bb243f0fd4c6698030a2bfcedae919af"

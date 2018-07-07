@@ -1,5 +1,6 @@
 const path = require("path");
-const rp = require("request-promise");
+
+const { listTagsPromise } = require("../src/docker/api");
 
 const {
   createLogger,
@@ -29,30 +30,13 @@ const dockerImageName = packageJson.name.replace(/^@/, "");
 const packageJsonVersion =
   process.env.OVERRIDE_VERSION_CHECK || packageJson.version;
 
-const rpOptions = {
-  headers: {
-    Authorization: "None",
-  },
-  json: true,
-  method: "GET",
-  resolveWithFullResponse: true,
-  uri: `https://registry.hub.docker.com/v2/repositories/${dockerImageName}/tags/`,
-};
-
-rp(rpOptions)
-  .then(({ body: { results } }) =>
-    Object.keys(results)
-      .map(x => results[x].name)
-      .filter(x => x !== "latest")
-  )
+listTagsPromise(dockerImageName)
   .then(versions => compareSemvers(versions, packageJsonVersion))
   .then(pass => process.exit(pass ? 0 : -1))
   .catch(err => {
-    console.error(JSON.stringify(rpOptions, null, 2));
-
     console.error((err.error && JSON.stringify(err.error, null, 2)) || err);
 
     console.error(err.response.headers);
 
-    process.exit(-1);
+    process.exit(127);
   });

@@ -10,7 +10,7 @@
     "start": "scripts/start.sh",
     "preview:comment": "markdown-preview -P marked reports/report.md",
     "report:aggregate": "scripts/report:aggregate.sh",
-    "report:deploy_plan": "scripts/report:deploy_plan.js",
+    "report:deploy": "node scripts/report:deploy.js",
     "report:unit": "scripts/report:unit.sh",
     "submit:comment": "scripts/submit:comment.sh",
     "test:integration": "scripts/test:integration.sh",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@keymux/github_cli": "^0.1.7",
     "@keymux/mochawesome_to_markdown": "^0.1.0",
+    "@keymux/promisr": "^0.1.1",
     "chai": "^4.1.2",
     "markdown-preview": "^0.4.3",
     "mocha": "^5.2.0",

@@ -8,24 +8,30 @@ SCRIPTS_DIR="${SCRIPTS_DIR:?}"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 P_CLOB="${SCRIPTS_DIR}/prevent_clobber.js"
 V_WKFLOW="${SCRIPTS_DIR}/validate_workflow.js"
+R_DEPLOY="${SCRIPTS_DIR}/report:deploy.js"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
 export DEBUG_LOGGING=1
 
-testPClob() {
-  export OVERRIDE_VERSION_CHECK=$1
-
-  result=$(node "${P_CLOB}" 2>&1)
-  CODE=$?
-
-  if [ ${CODE} -ne ${2} ]; then
-    echo "Failed ${OVERRIDE_VERSION_CHECK}" >&2
+val() {
+  if [ ${CODE} -ne ${EXP_CODE} ]; then
+    echo "Failed test with exit ${CODE} -- expected ${EXP_CODE} given args $@" >&2
 
     echo "Logged: ${result}" >&2
 
     exit -1
   fi
+}
+
+testPClob() {
+  export OVERRIDE_VERSION_CHECK=$1
+  export EXP_CODE=$2
+
+  result=$(node "${P_CLOB}" 2>&1)
+  CODE=$?
+
+  val "$*"
 }
 
 testValidateWorkflow() {
@@ -38,14 +44,38 @@ testValidateWorkflow() {
   result=$(node "${V_WKFLOW}" 2>&1)
   CODE=$?
 
-  if [ ${CODE} -ne ${EXP_CODE} ]; then
-    echo "Failed test with exit ${CODE} -- expected ${EXP_CODE} given args $@" >&2
-
-    echo "Logged: ${result}" >&2
-
-    exit -1
-  fi
+  val "$*"
 }
+
+testReportDeploy() {
+  export MARKDOWN_FILE=$1
+  export CHANGE_BRANCH=$2
+  export CHANGE_TARGET=$3
+  export OVERRIDE_VERSION_CHECK=$4
+  export EXP_CODE=$5
+
+  result=$(node "${R_DEPLOY}" 2>&1)
+  CODE=$?
+
+  val "$*"
+}
+
+# release -> master
+FILE="/tmp/$(uuid)"
+
+for DB in master develop; do
+  TAG="0.1.0" # Old
+  testReportDeploy "${FILE}" "release/1" "${DB}" "${TAG}" 0
+  assertGrep "it would clobber an existing deployment" "${FILE}"
+
+  TAG="0.2.0-alpha.1" # Same
+  testReportDeploy "${FILE}" "release/1" "${DB}" "${TAG}" 0
+  assertGrep "it would clobber an existing deployment" "${FILE}"
+
+  TAG="999.999.999" # New
+  testReportDeploy "${FILE}" "release/1" "${DB}" "${TAG}" 0
+  assertGrep "will be deployed" "${FILE}"
+done
 
 # Tests that should pass
 for i in "999.999.999" "999.999.999-ZZZ.999"; do
