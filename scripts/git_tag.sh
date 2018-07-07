@@ -14,4 +14,4 @@ case $@ in
     ;;
 esac
 
-git tag $v
+git tag $v && git push --tags
