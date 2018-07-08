@@ -19,7 +19,7 @@ node("docker") {
     "--entrypoint",
     "''",
     "-u 1001:999",
-    "-v ${env.HOME}/.ssh/known_hosts:/known_hosts:rw",
+    "-v ${PWD}/config/.ssh:/home/nvm/.ssh:rw",
   ].join(" ")
 
   def dockerArgs = [
