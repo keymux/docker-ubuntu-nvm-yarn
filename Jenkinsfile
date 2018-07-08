@@ -1,4 +1,6 @@
 node("docker") {
+  checkout scm
+
   def nvm = { e -> sh("/nvm.sh ${e}") }
   def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
 
@@ -19,7 +21,7 @@ node("docker") {
     "--entrypoint",
     "''",
     "-u 1001:999",
-    "-v ${env.WORKSPACE}/config/.ssh:/usr/local/nvm/.ssh:rw",
+    "-v ${env.WORKSPACE}/config/.ssh:/usr/local/nvm/.ssh:rw,z",
   ].join(" ")
 
   def dockerArgs = [
@@ -37,8 +39,6 @@ node("docker") {
     .image(imageAndTag)
     .inside(allDockerArgs)
   {
-    checkout scm
-
     def mapToSteps = load("src/build/map_to_steps.groovy")
     //def postCommentFileCreator = load("src/build/post_comment_file_creator.groovy")
 
