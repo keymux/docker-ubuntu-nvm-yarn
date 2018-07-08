@@ -146,7 +146,9 @@ node("docker") {
       if (env.BRANCH_NAME == "master") {
         nvm("yarn prevent_clobber")
 
-        nvm("yarn git_tag")
+        sshagent (credentials: ['665675ba-3101-4c2b-9aad-f25e18698463']) {
+          nvm("yarn git_tag")
+        }
 
         withDockerServer() {
           withDockerRegistry([credentialsId: "docker-keymux"]) {
