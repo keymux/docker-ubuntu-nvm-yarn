@@ -144,7 +144,7 @@ node("docker") {
 
     stage ("Deploy") {
       // If current branch is master or dev or develop
-      if (["master", "develop", "dev"].containsValue(env.BRANCH_NAME)) {
+      if (["master", "develop", "dev"].contains(env.BRANCH_NAME)) {
         def wouldClobber = nvmTest("yarn prevent_clobber")
 
         // and would not clobber an existing deployment, then deploy
