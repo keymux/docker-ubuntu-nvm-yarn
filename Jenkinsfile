@@ -11,7 +11,8 @@ node("docker") {
   def dockerInDockerVolsArgs = [
     "/var/run/docker.sock",
     "/usr/bin/docker",
-    "/usr/lib/x86_64-linux-gnu/libltdl.so.7"
+    "/usr/lib/x86_64-linux-gnu/libltdl.so.7",
+    "${env.HOME}/.ssh/known_hosts"
   ].collect { "-v ${it}:${it}" }.join(" ")
 
   // TODO: User and Group ID should be determined from the host here
