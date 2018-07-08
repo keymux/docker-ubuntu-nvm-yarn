@@ -144,28 +144,28 @@ node("docker") {
 
     stage ("Deploy") {
       sshagent (credentials: ['665675ba-3101-4c2b-9aad-f25e18698463']) {
-        // If this is a new changeset on master
-        if (env.BRANCH_NAME == "master") {
-          nvm("yarn prevent_clobber")
+        withDockerRegistry([credentialsId: "docker-keymux"]) {
+          // If this is a new changeset on master
+          if (env.BRANCH_NAME == "master") {
+            nvm("yarn prevent_clobber")
 
-          nvm("yarn git_tag")
-
-          withDockerServer() {
-            withDockerRegistry([credentialsId: "docker-keymux"]) {
-              nvm("yarn push")
-            }
-          }
-        } else if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
-        // If this is a new changeset on develop
-          def wouldClobber = nvmTest("yarn prevent_clobber")
-
-          if (wouldClobber == 0) {
             nvm("yarn git_tag")
 
-            nvm("yarn push")
+            withDockerServer() {
+              nvm("yarn push")
+            }
+          } else if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
+          // If this is a new changeset on develop
+            def wouldClobber = nvmTest("yarn prevent_clobber")
+
+            if (wouldClobber == 0) {
+              nvm("yarn git_tag")
+
+              nvm("yarn push")
+            }
+          } else {
+            echo("Nothing to do")
           }
-        } else {
-          echo("Nothing to do")
         }
       }
     }
