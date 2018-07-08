@@ -5,7 +5,7 @@ node("docker") {
   def versions = ["6.10.2", "6", "7", "8.10", "8", "9", "10"]
 
   def image = "keymux/docker-ubuntu-nvm-yarn"
-  def tag = "0.2.0-alpha.2"
+  def tag = "0.2.0-alpha.3"
   def imageAndTag = "${image}:${tag}"
 
   def dockerInDockerVolsArgs = [
