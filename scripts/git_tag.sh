@@ -6,7 +6,7 @@ ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
-# User the root level known_hosts if it is present (i.e. in docker)
+# Use the root level known_hosts if it is present (i.e. in docker)
 if [ -f "/known_hosts" ]; then
   KH="-o UserKnownHostsFile=/known_hosts"
 fi
