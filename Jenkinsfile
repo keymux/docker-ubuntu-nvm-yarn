@@ -12,7 +12,6 @@ node("docker") {
     "/var/run/docker.sock",
     "/usr/bin/docker",
     "/usr/lib/x86_64-linux-gnu/libltdl.so.7",
-    "${env.HOME}/.ssh/known_hosts"
   ].collect { "-v ${it}:${it}" }.join(" ")
 
   // TODO: User and Group ID should be determined from the host here
@@ -20,11 +19,12 @@ node("docker") {
     "--entrypoint",
     "''",
     "-u 1001:999",
+    "${env.HOME}/.ssh/known_hosts:/home/nvm/.ssh/known_hosts:ro",
   ].join(" ")
 
   def dockerArgs = [
     "-v ${env.HOME}/.cache/yarn:/.cache/yarn:rw",
-    "-w ${env.WORKSPACE}"
+    "-w ${env.WORKSPACE}",
   ].join(" ")
 
   def allDockerArgs = "${dockerInDockerVolsArgs} ${dockerInDockerArgs} ${dockerArgs}"
