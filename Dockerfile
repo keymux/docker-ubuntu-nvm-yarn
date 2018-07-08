@@ -1,6 +1,17 @@
 FROM ubuntu:18.04
 
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+ENV USER nvm
+
+ENV USERID 1001
+ENV USERGID 1005
+ENV USERGNAME jenkins
+ENV DOCKERGID 999
+ENV DOCKERGNAME docker
+
+# Ensure BASH is used for Jenkins pipelines
+# TODO: Better way to accomplish this?
+RUN rm /bin/sh \
+  && ln -s /bin/bash /bin/sh
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
@@ -8,23 +19,44 @@ ENV NVM_DIR /usr/local/nvm
 
 ENV NVM $NVM_DIR/nvm.sh
 
-RUN apt update && apt install -y -q --no-install-recommends \
-    ca-certificates \
-    curl \
-    gnupg
+# Packages to
+# * Acquire dependencies
+ENV ACQUIRE_DEPENDENCIES "apt-transport-https ca-certificates curl gnupg"
+# * Clone repositories
+ENV CLONE_REPOSITORIES "git openssh-client"
+# * Scripting dependencies
+ENV SCRIPTING_DEPENDENCIES "jq"
 
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
-    && source $NVM \
-    && mkdir -p $NVM_DIR/versions \
-    && V=$(nvm ls-remote | tail -n 1) \
-    && nvm install ${V} \
-    && nvm use ${V}
+RUN apt update \
+  && apt install -y -q --no-install-recommends \
+    ${ACQUIRE_DEPENDENCIES} \
+    ${CLONE_REPOSITORIES} \
+    ${SCRIPTING_DEPENDENCIES}
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-  && "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-  && apt update && apt install -y -q --no-install-recommends yarn
+RUN mkdir -p "${NVM_DIR}" \
+  && groupadd -g ${DOCKERGID} "${DOCKERGNAME}" \
+  && groupadd -g ${USERGID} "${USERGNAME}" \
+  && useradd -u ${USERID} -g ${DOCKERGID} -G "${USERGNAME}" -d "${NVM_DIR}" "${USER}" \
+  && chown -R ${USER} ${NVM_DIR} \
+  && chmod -R u+rw ${NVM_DIR}
 
-COPY entrypoint.sh /entrypoint.sh
+USER ${USER}
 
-ENTRYPOINT ["/entrypoint.sh"]
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash
+
+RUN source $NVM \
+  && mkdir -p $NVM_DIR/versions \
+  && V=$(nvm ls-remote | tail -n 1) \
+  && nvm install ${V} \
+  && nvm use ${V}
+
+RUN . ${NVM} \
+  && V=$(nvm ls | tail -n 1) \
+  && nvm use ${V} \
+  && npm install -g yarn \
+  && yarn --version
+
+COPY nvm.sh /nvm.sh
+
+ENTRYPOINT ["/nvm.sh"]
 CMD ["node", "-v"]
