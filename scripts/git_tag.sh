@@ -12,6 +12,13 @@ if ! echo ${TEST_AUTH_OUTPUT} | grep "You've successfully authenticated" > /dev/
   echo "Cannot authenticate with github" >&2
   echo "${TEST_AUTH_OUTPUT}" >&2
 
+  echo "Some introspection:" >&2
+  set -x
+  cat $HOME/.ssh/known_hosts >&2
+  ls $HOME/.ssh >&2
+
+  set +x
+
   exit -1
 fi
 
