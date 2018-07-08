@@ -145,19 +145,11 @@ node("docker") {
     stage ("Deploy") {
       sshagent (credentials: ['665675ba-3101-4c2b-9aad-f25e18698463']) {
         withDockerRegistry([credentialsId: "docker-keymux"]) {
-          // If this is a new changeset on master
-          if (env.BRANCH_NAME == "master") {
-            nvm("yarn prevent_clobber")
-
-            nvm("yarn git_tag")
-
-            withDockerServer() {
-              nvm("yarn push")
-            }
-          } else if (env.BRANCH_NAME == "develop" || env.BRANCH_NAME == "dev") {
-          // If this is a new changeset on develop
+          // If current branch is master or dev or develop
+          if (["master", "develop", "dev"].containsValue(env.BRANCH_NAME)) {
             def wouldClobber = nvmTest("yarn prevent_clobber")
 
+            // and would not clobber an existing deployment, then deploy
             if (wouldClobber == 0) {
               nvm("yarn git_tag")
 
