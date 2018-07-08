@@ -8,7 +8,7 @@ ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 
 # Verify that we can authenticate with github
 TEST_AUTH_OUTPUT=$(echo x | ssh -vvv git@github.com 2>&1)
-if ! echo ${TEST_AUTH_OUTPUT} | grep "You've successfully authenticated"; then
+if ! echo ${TEST_AUTH_OUTPUT} | grep "You've successfully authenticated" > /dev/null; then
   echo "Cannot authenticate with github" >&2
   echo "${TEST_AUTH_OUTPUT}" >&2
 
