@@ -19,14 +19,19 @@ ENV NVM_DIR /usr/local/nvm
 
 ENV NVM $NVM_DIR/nvm.sh
 
+# Packages to
+# * Acquire dependencies
+ENV ACQUIRE_DEPENDENCIES "apt-transport-https ca-certificates curl gnupg"
+# * Clone repositories
+ENV CLONE_REPOSITORIES "git openssh-client"
+# * Scripting dependencies
+ENV SCRIPTING_DEPENDENCIES "jq"
+
 RUN apt update \
   && apt install -y -q --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    git \
-    gnupg \
-    jq
+    ${ACQUIRE_DEPENDENCIES} \
+    ${CLONE_REPOSITORIES} \
+    ${SCRIPTING_DEPENDENCIES}
 
 RUN mkdir -p "${NVM_DIR}" \
   && groupadd -g ${DOCKERGID} "${DOCKERGNAME}" \
