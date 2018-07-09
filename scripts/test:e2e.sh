@@ -8,7 +8,7 @@ SCRIPTS_DIR="${SCRIPTS_DIR:?}"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 P_CLOB="${SCRIPTS_DIR}/prevent_clobber.js"
 V_WKFLOW="${SCRIPTS_DIR}/validate_workflow.js"
-R_DEPLOY="${SCRIPTS_DIR}/report:deploy.js"
+R_DEPLOY="${SCRIPTS_DIR}/report/deploy.js"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
