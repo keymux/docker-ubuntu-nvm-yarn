@@ -8,7 +8,7 @@ SCRIPTS_DIR="${SCRIPTS_DIR:?}"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 P_CLOB="${SCRIPTS_DIR}/prevent_clobber.js"
 V_WKFLOW="${SCRIPTS_DIR}/validate_workflow.js"
-R_DEPLOY="${SCRIPTS_DIR}/report:deploy.js"
+R_DEPLOY="${SCRIPTS_DIR}/report/deploy.js"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
@@ -76,6 +76,9 @@ for DB in master develop; do
   testReportDeploy "${FILE}" "release/1" "${DB}" "${TAG}" 0
   assertGrep "will be deployed" "${FILE}"
 done
+
+testReportDeploy "${FILE}" "" "" "${TAG}" 0
+assertGrep "no report needed" "${FILE}"
 
 # Tests that should pass
 for i in "999.999.999" "999.999.999-ZZZ.999"; do

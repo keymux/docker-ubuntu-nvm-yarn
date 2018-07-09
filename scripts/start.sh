@@ -6,7 +6,6 @@ ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
-set -x
 docker run \
   -v "/var/run/docker.sock:/var/run/docker.sock:rw" \
   -v "/usr/bin/docker:/usr/bin/docker:ro" \
