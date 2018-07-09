@@ -14,6 +14,22 @@ Branch  | Status
 Master  | [![Build Status](https://jenkins.keymux.org/buildStatus/icon?job=keymux/docker-ubuntu-nvm-yarn/master)](https://jenkins.keymux.org/job/keymux/job/docker-ubuntu-nvm-yarn/job/master/)
 Develop | [![Build Status](https://jenkins.keymux.org/buildStatus/icon?job=keymux/docker-ubuntu-nvm-yarn/develop)](https://jenkins.keymux.org/job/keymux/job/docker-ubuntu-nvm-yarn/job/develop/)
 
+## Using the Container
+
+### Run it Locally
+
+```bash
+docker run keymux/docker-ubuntu-nvm-yarn /nvm.sh node -e "console.log('Hello World');"
+```
+
+### Build a container based on it
+
+```Dockerfile
+FROM keymux/docker-ubuntu-nvm-yarn:0.2.0
+
+# Add your magic here
+```
+
 ## Build instructions:
 
 ### Jenkins Global Configuration
