@@ -3,9 +3,7 @@ import groovy.json.JsonSlurper
 node("docker") {
   checkout scm
 
-  def jsonParser = new JsonSlurper();
-  def packageJsonContents = sh(script: "cat package.json", returnStdout: true)
-  def packageJson = jsonParser.parseText(packageJsonContents)
+  def packageJsonReports = sh(script: "cat package.json | jq -r '.reports[]'", returnStdout: true).split("\n")
 
   def nvm = { e -> sh("/nvm.sh ${e}") }
   def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
@@ -114,9 +112,7 @@ node("docker") {
 
     stage ("Reporting") {
       // The list of reports to run is contained in .reports of package.json
-      reports = packageJson.reports
-
-      parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, reports))
+      parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, packageJsonReports))
     }
 
     // If this is a pull request, submit a comment
