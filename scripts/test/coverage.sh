@@ -9,8 +9,6 @@ SCRIPTS_DIR="$(realpath "${MY_DIR}/..")"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 UNIT_DIR="${ROOT_DIR}/test/unit"
 REPORTS_DIR="${ROOT_DIR}/reports"
-COVERAGE_SUMMARY_JSON="${REPORTS_DIR}/coverage/coverage-summary.json"
-MARKDOWN_FILE="${REPORTS_DIR}/coverage.md"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
@@ -20,11 +18,8 @@ yarn nyc \
   --all \
   --reporter=lcov \
   --reporter=json-summary \
+  --reporter=text \
   --report-dir="${REPORTS_DIR}/coverage" \
   mocha \
-    --reporter-options reportDir="${REPORTS_DIR}/unit" \
-    "${UNIT_DIR}" \
-  && \
-  nyc-markdown \
-    --coverage_filename "${COVERAGE_SUMMARY_JSON}" \
-    | tee -a "${MARKDOWN_FILE}"
+    --reporter-options reportDir="${REPORTS_DIR}/coverage" \
+    "${UNIT_DIR}"
