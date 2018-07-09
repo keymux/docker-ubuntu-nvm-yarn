@@ -4,7 +4,8 @@ node("docker") {
   checkout scm
 
   def jsonParser = new JsonSlurper();
-  def package_json = jsonParser.parseText(new File("package.json").text)
+  def packageJsonContents = sh(script: "cat package.json", returnStdout: true)
+  def packageJson = jsonParser.parseText(packageJsonContents)
 
   def nvm = { e -> sh("/nvm.sh ${e}") }
   def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
@@ -113,7 +114,7 @@ node("docker") {
 
     stage ("Reporting") {
       // The list of reports to run is contained in .reports of package.json
-      reports = package_json.reports
+      reports = packageJson.reports
 
       parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, reports))
     }
