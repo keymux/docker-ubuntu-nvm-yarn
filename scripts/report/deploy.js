@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { reportDeploy } = require("../src/report_deploy");
+const { reportDeploy } = require("../../src/report_deploy");
 
 const { promiseMap } = require("@keymux/promisr");
 const { writeFilePromise } = require("@keymux/promisrfs");
@@ -19,8 +19,7 @@ const main = env =>
       // The markdown file to be written
       safeImageTag: formatImageMd("Can deploy", SAFE_IMAGE),
       unsafeImageTag: formatImageMd("Cannot deploy", UNSAFE_IMAGE),
-      markdownFile:
-        env.MARKDOWN_FILE || path.resolve("reports/report:deploy.md"),
+      markdownFile: env.MARKDOWN_FILE || path.resolve("reports/deploy.md"),
     })
   )
     .then(reportDeploy)
@@ -31,11 +30,13 @@ const main = env =>
         })
       )
     )
-    .then(env => process.exit(env.EXIT_CODE))
     .catch(err => {
+      if (err.EXIT_CODE) return env.EXIT_CODE;
+
       console.error(err);
 
-      process.exit(127);
-    });
+      return 127;
+    })
+    .then(({ EXIT_CODE }) => process.exit(EXIT_CODE));
 
 main(process.env);

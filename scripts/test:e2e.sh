@@ -77,6 +77,9 @@ for DB in master develop; do
   assertGrep "will be deployed" "${FILE}"
 done
 
+testReportDeploy "${FILE}" "" "" "${TAG}" 0
+assertGrep "no report needed" "${FILE}"
+
 # Tests that should pass
 for i in "999.999.999" "999.999.999-ZZZ.999"; do
   testPClob $i 0
