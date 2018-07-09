@@ -8,9 +8,9 @@ const {
   transports,
 } = require("winston");
 
-const { compareSemversCreator } = require("../src/compare_semvers");
+const { _compareSemversCreator } = require("../src/compare_semvers");
 
-const compareSemvers = compareSemversCreator(
+const compareSemvers = _compareSemversCreator(
   createLogger({
     format: combine(
       timestamp(),
