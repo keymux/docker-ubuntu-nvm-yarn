@@ -110,9 +110,11 @@ TAG="0.2.0"
 testValidateWorkflow "PR-8" "release/1" "${BRANCH}" "${TAG}" 0
 testValidateWorkflow "PR-8" "release/v${TAG}" "${BRANCH}" "${TAG}" 0
 
+# Allow develop to master
+testValidateWorkflow "PR-10" "develop" "${BRANCH}" "${TAG}" 0
+
 # PR
 testValidateWorkflow "PR-9" "bugfix/1" "${BRANCH}" "${TAG}" 255
-testValidateWorkflow "PR-10" "develop" "${BRANCH}" "${TAG}" 255
 testValidateWorkflow "PR-11" "feature/1" "${BRANCH}" "${TAG}" 255
 testValidateWorkflow "PR-12" "release/1" "${BRANCH}" "${TAG}" 0
 

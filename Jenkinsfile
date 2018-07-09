@@ -150,6 +150,10 @@ node("docker") {
         } else {
           echo("Nothing to do")
         }
+
+        if (env.BRANCH_NAME == "master") {
+          nvm("git pull && git checkout develop && git merge master && git push origin master && git checkout master")
+        }
       }
     }
   }

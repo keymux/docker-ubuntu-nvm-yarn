@@ -58,10 +58,10 @@ const validateWorkflow = env => {
     }
 
     /**
-     * Only allow release branches to merge to master
+     * Only allow release branches and develop to merge to master
      */
     if (masterBranch.test(CHANGE_TARGET)) {
-      if (release.test(CHANGE_BRANCH)) {
+      if (release.test(CHANGE_BRANCH) || developBranch.test(CHANGE_BRANCH)) {
         pass();
       } else {
         fail();
