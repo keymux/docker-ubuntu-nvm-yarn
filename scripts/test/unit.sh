@@ -8,7 +8,7 @@ MY_DIR="${MY_DIR:?}"
 SCRIPTS_DIR="$(realpath "${MY_DIR}/..")"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 UNIT_DIR="${ROOT_DIR}/test/unit"
-REPORTS_DIR="${ROOT_DIR}/reports"
+REPORTS_DIR="/tmp/reports"
 
 yarn mocha \
   --reporter-options reportDir="${REPORTS_DIR}/unit" \
