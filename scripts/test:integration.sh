@@ -103,14 +103,9 @@ testValidateWorkflow "release/1" "release/1" "${BRANCH}" "${TAG}" 0
 # to master
 BRANCH=master
 # Tag tests
-TAG="0.2.0-dirty"
-testValidateWorkflow "PR-5" "release/1" "${BRANCH}" "${TAG}" 255
-TAG="0.2.0-alpha.1"
-testValidateWorkflow "PR-6" "release/1" "${BRANCH}" "${TAG}" 255
-TAG="0.2.0-"
-testValidateWorkflow "PR-7" "release/1" "${BRANCH}" "${TAG}" 255
 TAG="0.2.0"
 testValidateWorkflow "PR-8" "release/1" "${BRANCH}" "${TAG}" 0
+testValidateWorkflow "PR-8" "release/v${TAG}" "${BRANCH}" "${TAG}" 0
 
 # PR
 testValidateWorkflow "PR-9" "bugfix/1" "${BRANCH}" "${TAG}" 255
