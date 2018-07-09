@@ -43,6 +43,11 @@ assertGrep() {
   fi
 }
 
+# The list of reports to run is contained in .reports of package.json
+getReports() {
+  cat "${ROOT_DIR}/package.json" | jq -r '.reports[]'
+}
+
 whichOrExit yarn
 whichOrExit jq
 

@@ -8,7 +8,7 @@ SCRIPTS_DIR="${SCRIPTS_DIR:?}"
 ROOT_DIR="$(realpath "${SCRIPTS_DIR}/..")"
 P_CLOB="${SCRIPTS_DIR}/prevent_clobber.js"
 V_WKFLOW="${SCRIPTS_DIR}/validate_workflow.js"
-R_DEPLOY="${SCRIPTS_DIR}/report:deploy.js"
+R_DEPLOY="${SCRIPTS_DIR}/report/deploy.js"
 
 . "${SCRIPTS_DIR}/lib.sh"
 
@@ -77,6 +77,9 @@ for DB in master develop; do
   assertGrep "will be deployed" "${FILE}"
 done
 
+testReportDeploy "${FILE}" "" "" "${TAG}" 0
+assertGrep "no report needed" "${FILE}"
+
 # Tests that should pass
 for i in "999.999.999" "999.999.999-ZZZ.999"; do
   testPClob $i 0
@@ -107,9 +110,11 @@ TAG="0.2.0"
 testValidateWorkflow "PR-8" "release/1" "${BRANCH}" "${TAG}" 0
 testValidateWorkflow "PR-8" "release/v${TAG}" "${BRANCH}" "${TAG}" 0
 
+# Allow develop to master
+testValidateWorkflow "PR-10" "develop" "${BRANCH}" "${TAG}" 0
+
 # PR
 testValidateWorkflow "PR-9" "bugfix/1" "${BRANCH}" "${TAG}" 255
-testValidateWorkflow "PR-10" "develop" "${BRANCH}" "${TAG}" 255
 testValidateWorkflow "PR-11" "feature/1" "${BRANCH}" "${TAG}" 255
 testValidateWorkflow "PR-12" "release/1" "${BRANCH}" "${TAG}" 0
 

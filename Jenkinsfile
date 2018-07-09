@@ -1,4 +1,10 @@
+import groovy.json.JsonSlurper
+
 node("docker") {
+  checkout scm
+
+  def packageJsonReports = sh(script: "cat package.json | jq -r '.reports[]'", returnStdout: true).split("\n")
+
   def nvm = { e -> sh("/nvm.sh ${e}") }
   def nvmTest = { e -> sh(script: "/nvm.sh ${e}", returnStatus: true ) }
 
@@ -7,6 +13,10 @@ node("docker") {
   def image = "keymux/docker-ubuntu-nvm-yarn"
   def tag = "0.2.0-alpha.3"
   def imageAndTag = "${image}:${tag}"
+
+  def yarnCache = "${env.HOME}/.cache/yarn"
+
+  sh("mkdir -p ${yarnCache}")
 
   def dockerInDockerVolsArgs = [
     "/var/run/docker.sock",
@@ -19,28 +29,21 @@ node("docker") {
     "--entrypoint",
     "''",
     "-u 1001:999",
-    "-v ${env.WORKSPACE}/config/.ssh:/usr/local/nvm/.ssh:rw",
+    "-v ${env.WORKSPACE}/config/.ssh:/usr/local/nvm/.ssh:rw,z",
   ].join(" ")
 
   def dockerArgs = [
-    "-v ${env.HOME}/.cache/yarn:/.cache/yarn:rw",
+    "-v ${yarnCache}:/.cache/yarn:rw",
     "-w ${env.WORKSPACE}",
   ].join(" ")
 
   def allDockerArgs = "${dockerInDockerVolsArgs} ${dockerInDockerArgs} ${dockerArgs}"
 
-  //def url = CHANGE_URL.replaceAll('/[^/]+/[^/]+$', "")
-
-  //properties([$class: 'GithubProjectProperty', displayName: '', projectUrlStr: url])
-
   docker
     .image(imageAndTag)
     .inside(allDockerArgs)
   {
-    checkout scm
-
     def mapToSteps = load("src/build/map_to_steps.groovy")
-    //def postCommentFileCreator = load("src/build/post_comment_file_creator.groovy")
 
     stage ("Clean") {
       nvm("git clean -xdf")
@@ -78,7 +81,7 @@ node("docker") {
     stage ("Integration Tests") {
       def fn = { version ->
         nvm("yarn test:version ${version}")
-        nvm("yarn test:integration")
+        nvm("yarn test:e2e")
       }
 
       def steps = mapToSteps(fn, versions)
@@ -108,37 +111,25 @@ node("docker") {
     }
 
     stage ("Reporting") {
-      reports = [
-        "unit"
-      ]
-
-      if (env.BRANCH_NAME =~ /^PR-/) {
-        reports << "deploy"
-      }
-
-      parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, reports))
+      // The list of reports to run is contained in .reports of package.json
+      parallel(mapToSteps({ r -> nvm("yarn report:${r}") }, packageJsonReports))
     }
 
-    stage ("Post report") {
-      // If this is a pull request, submit a comment
-      if (env.BRANCH_NAME =~ /^PR-/) {
-        def s = { x -> sh(x) }
-        def g = { x -> githubPRComment(
-          comment: githubPRMessage(content: "test ${x}"),
-          errorHandler: statusOnPublisherError('UNSTABLE')
-        )}
-
+    // If this is a pull request, submit a comment
+    if (env.BRANCH_NAME =~ /^PR-/) {
+      stage ("Post report") {
         nvm("yarn report:aggregate")
 
-        withCredentials([string(credentialsId: "jenkins-hibes_github_access_token", variable: "GITHUB_ACCESS_TOKEN")]) {
+        withCredentials([string(credentialsId: "jenkins_github_access_token", variable: "GITHUB_ACCESS_TOKEN")]) {
           nvm("yarn submit:comment")
-
-          //postCommentFileCreator(s, g)("reports/report.md")
         }
       }
     }
 
     stage ("Validate Workflow") {
+      // Checks for things like (and prevents by failing builds)
+      //  - pull requests trying to merge release branches into develop
+      //  - pull requests trying to merge features or bugfixes into master
       nvm("yarn validate_workflow")
     }
 
@@ -149,7 +140,7 @@ node("docker") {
 
         // and would not clobber an existing deployment, then deploy
         if (wouldClobber == 0) {
-          sshagent (credentials: ['665675ba-3101-4c2b-9aad-f25e18698463']) {
+          sshagent (credentials: ["jenkins_github_ssh"]) {
             nvm("yarn git_tag")
           }
 
@@ -158,6 +149,10 @@ node("docker") {
           }
         } else {
           echo("Nothing to do")
+        }
+
+        if (env.BRANCH_NAME == "master") {
+          nvm("git pull && git checkout develop && git merge master && git push origin master && git checkout master")
         }
       }
     }

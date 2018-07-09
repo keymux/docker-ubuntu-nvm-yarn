@@ -18,14 +18,7 @@ def process = {
     return version
 }
 
-// Simulates Jenkins groovy parallel function for pipelines
-def parallel = {
-  m ->
-    m.collect {
-      k, v ->
-        v(k)
-    }
-}
+def parallel = load("src/build/parallel_lambda.groovy")
 
 def nvm = {
   cmd -> "/nvm ${cmd * 3}"

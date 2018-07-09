@@ -8,6 +8,14 @@ const pkg = require(path.resolve("package.json"));
 const dockerImageName = pkg.name.replace(/^@/, "");
 
 const checkParams = env => {
+  if (!env.sourceBranch && !env.destinationBranch) {
+    console.error("Not a pull request, no report needed");
+
+    return Promise.reject({
+      EXIT_CODE: 0,
+    });
+  }
+
   ["markdownFile", "sourceBranch", "destinationBranch", "version"].forEach(
     ea => {
       if (!env[ea]) {
@@ -68,8 +76,8 @@ const reportDeploy = env =>
       })
     )
     .catch(err => {
-      if (err.EXIT_CODE) {
-        return err;
+      if (err.EXIT_CODE !== undefined) {
+        return Promise.reject(err);
       } else {
         console.error(err);
 
