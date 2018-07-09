@@ -153,7 +153,7 @@ node("docker") {
 
         if (env.BRANCH_NAME == "master") {
           sshagent (credentials: ["jenkins_github_ssh"]) {
-            nvm("git checkout master && git pull && git checkout develop && git merge master && git push origin master && git checkout master")
+            nvm("git checkout master && git pull && git checkout develop && git merge master && git push origin develop && git checkout master")
           }
         }
       }
