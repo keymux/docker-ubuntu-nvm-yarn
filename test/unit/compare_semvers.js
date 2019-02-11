@@ -1,8 +1,17 @@
 const { expect } = require("chai");
+const { spy } = require("sinon");
 
-const { compareSemvers } = require("../../src/compare_semvers.js");
+const { _compareSemversCreator } = require("../../src/compare_semvers");
+const { defaultLogger } = require("../../src/default_logger");
 
-describe("compareSemvers()", () => {
+describe("_compareSemversCreator()", () => {
+  const logger = Object.keys(defaultLogger).reduce(
+    (a, key) => Object.assign({}, a, { [key]: spy() }),
+    {}
+  );
+
+  const compareSemvers = _compareSemversCreator(logger);
+
   const fixtures = [
     {
       input: [["0.1.0", "0.2.0"], "0.2.0"],

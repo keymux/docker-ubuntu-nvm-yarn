@@ -1,5 +1,9 @@
-const validateWorkflow = env => {
-  return new Promise((resolve, reject) => {
+const {
+  _RETURN_CODES: { FAIL, FATAL, SUCCESS },
+} = require("./return_codes");
+
+const _validateWorkflowCreator = logger => env => {
+  return new Promise(resolve => {
     const { BRANCH_NAME, CHANGE_BRANCH, CHANGE_TARGET } = env;
 
     const masterBranch = new RegExp(/^master$/i);
@@ -13,16 +17,15 @@ const validateWorkflow = env => {
 
     const PR = new RegExp(/^PR-/);
 
-    const quit = (code = -1) => resolve(code);
-
     const pass = () => {
-      console.error("Passed workflow validation");
-      quit(0);
+      logger.error("Passed workflow validation");
+
+      return resolve({ EXIT_CODE: SUCCESS });
     };
 
     const fail = () => {
-      console.error("Failed workflow validation");
-      console.error(
+      logger.error("Failed workflow validation");
+      logger.error(
         JSON.stringify(
           {
             BRANCH_NAME,
@@ -33,58 +36,63 @@ const validateWorkflow = env => {
           2
         )
       );
-      quit();
+
+      return resolve({ EXIT_CODE: FAIL });
     };
 
-    const regexes = [feature, bugfix, release, masterBranch, developBranch];
-
-    const noNeedToValidate = regexes.reduce(
-      (acc, regex) => acc || regex.test(BRANCH_NAME),
-      false
-    );
+    const noNeedToValidate = [
+      feature,
+      bugfix,
+      release,
+      masterBranch,
+      developBranch,
+    ].reduce((acc, regex) => acc || regex.test(BRANCH_NAME), false);
 
     if (noNeedToValidate) {
-      console.error("Not a pull request -- no need to validate workflow");
+      logger.error("Not a pull request -- no need to validate workflow");
 
-      quit(0);
+      return resolve({ EXIT_CODE: SUCCESS });
     }
 
-    console.error("Need to validate");
+    logger.error("Need to validate");
 
-    if (!PR.test(BRANCH_NAME)) {
-      console.error(`Unexpected branch name ${BRANCH_NAME}`);
-
-      fail();
-    }
-
-    /**
-     * Only allow release branches and develop to merge to master
-     */
     if (masterBranch.test(CHANGE_TARGET)) {
+      /**
+       * Only allow release branches and develop to merge to master
+       */
       if (release.test(CHANGE_BRANCH) || developBranch.test(CHANGE_BRANCH)) {
-        pass();
+        return pass();
       } else {
-        fail();
+        return fail();
       }
-    }
-
-    /**
-     * Only allow feature branches, bugfix branches, or master to merge to develop
-     */
-    if (developBranch.test(CHANGE_TARGET)) {
+    } else if (developBranch.test(CHANGE_TARGET)) {
+      /**
+       * Only allow feature branches, bugfix branches, or master to merge to develop
+       */
       if (
         feature.test(CHANGE_BRANCH) ||
         bugfix.test(CHANGE_BRANCH) ||
         masterBranch.test(CHANGE_BRANCH)
       ) {
-        pass();
+        return pass();
       } else {
-        fail();
+        return fail();
+      }
+    } else {
+      if (!PR.test(BRANCH_NAME)) {
+        return fail();
+      } else {
+        return pass();
       }
     }
+  }).catch(err => {
+    return Object.assign({}, err, { EXIT_CODE: FATAL });
   });
 };
 
+const validateWorkflow = _validateWorkflowCreator(console);
+
 module.exports = {
+  _validateWorkflowCreator,
   validateWorkflow,
 };

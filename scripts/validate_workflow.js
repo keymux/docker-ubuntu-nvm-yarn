@@ -14,13 +14,4 @@ const appendDirtyTag = env =>
 
 Promise.resolve(env)
   .then(validateWorkflow)
-  .then(process.exit)
-  .catch(err => {
-    console.error(JSON.stringify(rpOptions, null, 2));
-
-    console.error((err.error && JSON.stringify(err.error, null, 2)) || err);
-
-    console.error(err.response.headers);
-
-    process.exit(-1);
-  });
+  .then(({ EXIT_CODE }) => process.exit(EXIT_CODE));

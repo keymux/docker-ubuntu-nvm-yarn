@@ -10,6 +10,7 @@
     "start": "scripts/start.sh",
     "preview": "markdown-preview -P remark",
     "preview:comment": "yarn preview reports/report.md",
+    "preview:coverage": "scripts/open.sh reports/coverage/lcov-report/index.html",
     "preview:readme": "yarn preview README.md",
     "report:_all": "scripts/report/_all.sh",
     "report:aggregate": "scripts/report/aggregate.sh",
@@ -17,8 +18,9 @@
     "report:deploy": "node scripts/report/deploy.js",
     "report:unit": "scripts/report/unit.sh",
     "submit:comment": "scripts/submit:comment.sh",
-    "test:e2e": "scripts/test:e2e.sh",
-    "test:unit": "scripts/test:unit.sh",
+    "test:coverage": "scripts/test/coverage.sh",
+    "test:e2e": "scripts/test/e2e.sh",
+    "test:unit": "scripts/test/unit.sh",
     "test:version": "scripts/test_version.sh",
     "validate_workflow": "node scripts/validate_workflow.js"
   },
@@ -34,13 +36,16 @@
     "@keymux/mochawesome_to_markdown": "^0.1.0",
     "@keymux/promisr": "^0.1.1",
     "chai": "^4.1.2",
+    "make-promises-safe": "^1.1.0",
     "markdown-preview": "^0.4.3",
     "mocha": "^5.2.0",
     "mochawesome": "^3.0.2",
+    "nodemon": "^1.17.5",
     "nyc": "^12.0.2",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "semver": "^5.5.0",
+    "sinon": "^6.1.3",
     "winston": "^3.0.0"
   }
 }
