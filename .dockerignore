@@ -1,0 +1,11 @@
+/config
+/Dockerfile
+/Jenkinsfile
+/node_modules
+/package.json
+/README.md
+/reports
+/scripts
+/src
+/test
+/yarn.lock
