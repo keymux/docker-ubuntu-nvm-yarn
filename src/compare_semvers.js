@@ -1,23 +1,11 @@
 const semver = require("semver");
 
-const defaultLogger = {
-  silly: () => null,
-  debug: () => null,
-  verbose: () => null,
-  info: () => null,
-  notice: () => null,
-  warn: console.error,
-  warning: console.error,
-  error: console.error,
-  crit: console.error,
-  alert: console.error,
-  emerg: console.error,
-};
+const { defaultLogger } = require("./default_logger");
 
 /**
  * @return {boolean} - True if this deployment would be a new version, False if it would clobber
  */
-const compareSemversCreator = logger => (versions, version) => {
+const _compareSemversCreator = logger => (versions, version) => {
   logger.debug(`Comparing ${version} with ${JSON.stringify(versions)}`);
 
   return versions.reduce((acc, v, index) => {
@@ -35,9 +23,9 @@ const compareSemversCreator = logger => (versions, version) => {
   }, true);
 };
 
-const compareSemvers = compareSemversCreator(defaultLogger);
+const compareSemvers = _compareSemversCreator(defaultLogger);
 
 module.exports = {
-  compareSemversCreator,
+  _compareSemversCreator,
   compareSemvers,
 };

@@ -1,6 +1,8 @@
-/.nyc_output/
-/node_modules/
-/reports/
+**/.nyc_output/**
+**/.nycrc
+**/mochawesome_report/**
+**/node_modules/**
+**/reports/**
 *.log
 *.swo
 *.swp
