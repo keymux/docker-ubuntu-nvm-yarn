@@ -18,6 +18,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 ENV NVM_DIR /usr/local/nvm
 
 ENV NVM $NVM_DIR/nvm.sh
+ENV APP_DIR "/app"
 
 # Packages to
 # * Acquire dependencies
@@ -37,8 +38,9 @@ RUN mkdir -p "${NVM_DIR}" \
   && groupadd -g ${DOCKERGID} "${DOCKERGNAME}" \
   && groupadd -g ${USERGID} "${USERGNAME}" \
   && useradd -u ${USERID} -g ${DOCKERGID} -G "${USERGNAME}" -d "${NVM_DIR}" "${USER}" \
-  && chown -R ${USER} ${NVM_DIR} \
-  && chmod -R u+rw ${NVM_DIR}
+  && mkdir -p ${APP_DIR} \
+  && chown -R ${USER} ${NVM_DIR} ${APP_DIR} \
+  && chmod -R u+rw ${NVM_DIR} ${APP_DIR}
 
 USER ${USER}
 
