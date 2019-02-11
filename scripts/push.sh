@@ -25,8 +25,8 @@ main() {
   elif check_version $describe; then
     yarn build
 
-    docker push ${I}:latest && \
-      docker tag ${I} ${I}:${V} && \
+    docker tag "${I}" "${I}:${V}" && \
+      docker push ${I}:latest && \
       docker push ${I}:${V}
   else
     echo "Refusing to publish 'dirty' version $describe" >&2
