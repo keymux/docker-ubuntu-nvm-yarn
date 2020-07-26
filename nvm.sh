@@ -10,4 +10,6 @@ fi
 
 nvm use ${NODE_VERSION} > /dev/null
 
+node install -g yarn
+
 "$@"
