@@ -34,7 +34,7 @@ RUN apt update \
 
 RUN mkdir -p "${NVM_DIR}" \
   && groupadd -g ${USERGID} "${WORKING_GROUP}" \
-  && useradd -u ${USERID} -G "${WORKING_GROUP}" -d "${NVM_DIR}" "${WORKING_USER}" \
+  && useradd -u ${USERID} -g "${WORKING_GROUP}" -d "${NVM_DIR}" "${WORKING_USER}" \
   && mkdir -p ${APP_DIR} \
   && chown -R ${WORKING_USER} ${NVM_DIR} ${APP_DIR} \
   && chmod -R u+rw ${NVM_DIR} ${APP_DIR}
