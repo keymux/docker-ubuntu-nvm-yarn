@@ -1,12 +1,10 @@
 FROM ubuntu:18.04
 
-ENV USER nvm
+ENV WORKING_USER nvm
 
-ENV USERID 1001
-ENV USERGID 1005
-ENV USERGNAME jenkins
-ENV DOCKERGID 999
-ENV DOCKERGNAME docker
+ENV USERID 1000
+ENV USERGID 1000
+ENV WORKING_GROUP nvm
 
 # Ensure BASH is used for Jenkins pipelines
 # TODO: Better way to accomplish this?
@@ -35,14 +33,13 @@ RUN apt update \
     ${SCRIPTING_DEPENDENCIES}
 
 RUN mkdir -p "${NVM_DIR}" \
-  && groupadd -g ${DOCKERGID} "${DOCKERGNAME}" \
-  && groupadd -g ${USERGID} "${USERGNAME}" \
-  && useradd -u ${USERID} -g ${DOCKERGID} -G "${USERGNAME}" -d "${NVM_DIR}" "${USER}" \
+  && groupadd -g ${USERGID} "${WORKING_GROUP}" \
+  && useradd -u ${USERID} -G "${WORKING_GROUP}" -d "${NVM_DIR}" "${WORKING_USER}" \
   && mkdir -p ${APP_DIR} \
-  && chown -R ${USER} ${NVM_DIR} ${APP_DIR} \
+  && chown -R ${WORKING_USER} ${NVM_DIR} ${APP_DIR} \
   && chmod -R u+rw ${NVM_DIR} ${APP_DIR}
 
-USER ${USER}
+USER ${WORKING_USER}
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash
 
@@ -59,6 +56,8 @@ RUN . ${NVM} \
   && yarn --version
 
 COPY nvm.sh /nvm.sh
+
+USER root
 
 ENTRYPOINT ["/nvm.sh"]
 CMD ["node", "-v"]
