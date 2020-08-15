@@ -1,6 +1,6 @@
 {
   "name": "@keymux/docker-ubuntu-nvm-yarn",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "An ubuntu 18.04 docker image with nvm, the latest node, and yarn installed",
   "scripts": {
     "build": "scripts/build.sh",
